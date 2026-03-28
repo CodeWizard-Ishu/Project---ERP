@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE & editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+.vitest/
+
+# Docker
+docker/postgres/data/
+docker/redis/data/
+
+# Prisma
+apps/api/prisma/migrations/**/migration_lock.toml
+
+# OS files
+.DS_Store
+*.pem
+
+# Debug
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache
+.npm
+.eslintcache
+
+# Misc
+*.tgz
+.prettierignore

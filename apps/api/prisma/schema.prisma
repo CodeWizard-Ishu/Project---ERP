@@ -1,0 +1,20 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+}
+
+// Phase 2 will replace this with real tables:
+// - tenants, users, roles, permissions, role_permissions, audit_logs
+// Prisma requires at least one model to generate the client.
+
+model Placeholder {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("_placeholder")
+}

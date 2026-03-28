@@ -1,0 +1,35 @@
+{
+  "name": "erp-system",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "docker compose up --build",
+    "dev:api": "pnpm --filter @erp/api dev",
+    "dev:web": "pnpm --filter @erp/web dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\"",
+    "test": "pnpm -r test",
+    "test:coverage": "pnpm -r test:coverage",
+    "typecheck": "pnpm -r typecheck",
+    "db:migrate": "pnpm --filter @erp/api db:migrate",
+    "db:migrate:dev": "pnpm --filter @erp/api db:migrate:dev",
+    "db:seed": "pnpm --filter @erp/api db:seed",
+    "db:reset": "bash scripts/db-reset.sh",
+    "db:studio": "pnpm --filter @erp/api db:studio",
+    "prepare": "node -e \"try{require('husky').install()}catch(e){}\""
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "husky": "^9.0.0",
+    "prettier": "^3.3.0",
+    "typescript": "^5.4.0"
+  }
+}

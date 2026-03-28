@@ -1,0 +1,16 @@
+FROM node:20-alpine
+WORKDIR /app
+
+RUN npm install -g pnpm@9
+
+COPY package.json pnpm-workspace.yaml ./
+COPY apps/web/package.json ./apps/web/
+COPY packages/shared/package.json ./packages/shared/
+
+RUN pnpm install
+
+COPY . .
+
+EXPOSE 5173
+
+CMD ["pnpm", "--filter", "@erp/web", "dev"]
