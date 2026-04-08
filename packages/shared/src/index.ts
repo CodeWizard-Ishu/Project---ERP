@@ -3,10 +3,15 @@ export type { BaseEntity, SoftDeletable, Auditable, TenantScoped, Nullable, Opti
 export type { ApiResponse, PaginatedApiResponse, PaginationMeta, ErrorResponse } from './types/index.js';
 export { ErrorCode } from './types/index.js';
 export type { ErrorDetail } from './types/index.js';
+export type { Tenant, TenantPlan, TenantStatus, TenantSettings, TenantPublicProfile } from './types/index.js';
+export type { User, PublicUser, UserWithRoles, UserProfile, UserStatus } from './types/index.js';
+export type { RbacResource, RbacAction, Permission, Role, PermissionRecord } from './types/index.js';
 
 // Constants
 export { HttpStatus, APP_CONSTANTS, CACHE_TTL, QUEUE_NAMES } from './constants/index.js';
 export type { HttpStatusCode } from './constants/index.js';
+export { PERMISSIONS, ALL_PERMISSIONS, SYSTEM_ROLES, DEFAULT_TENANT_ROLES } from './constants/index.js';
+export type { PermissionKey, PermissionValue, SystemRole, DefaultTenantRole, BuiltInRole } from './constants/index.js';
 
 // Schemas
 export { uuidSchema, emailSchema, passwordSchema, nameSchema, phoneSchema, urlSchema, dateSchema, positiveIntSchema, nonNegativeIntSchema, tenantIdSchema, searchQuerySchema } from './schemas/index.js';

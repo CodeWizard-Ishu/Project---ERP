@@ -1,5 +1,5 @@
-import winston from 'winston';
 import { AsyncLocalStorage } from 'async_hooks';
+import winston from 'winston';
 import { config } from '../config/env.js';
 
 export interface RequestContext {
@@ -32,9 +32,9 @@ const developmentFormat = combine(
   timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
   errors({ stack: true }),
   printf(({ level, message, timestamp: ts, requestId, stack, ...meta }) => {
-    const rid = requestId ? ` [${String(requestId)}]` : '';
+    const rid = requestId ? ` [${String(requestId as string)}]` : '';
     const metaStr = Object.keys(meta).length > 0 ? `\n${JSON.stringify(meta, null, 2)}` : '';
-    const stackStr = stack ? `\n${String(stack)}` : '';
+    const stackStr = stack ? `\n${String(stack as string)}` : '';
     return `${String(ts)}${rid} [${level}]: ${String(message)}${stackStr}${metaStr}`;
   }),
 );

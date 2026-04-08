@@ -1,10 +1,10 @@
-import { ErrorCode } from './errorCodes.js';
+import type { ErrorCode } from './errorCodes.js';
 
 export class AppError extends Error {
   public readonly code: ErrorCode;
   public readonly statusCode: number;
   public readonly isOperational: boolean;
-  public readonly context?: Record<string, unknown>;
+  public readonly context?: Record<string, unknown> | undefined;
 
   constructor(
     message: string,

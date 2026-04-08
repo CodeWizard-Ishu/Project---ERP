@@ -1,5 +1,5 @@
-import { type Request, type Response } from 'express';
-import { HealthService } from './health.service.js';
+import type { HealthService } from './health.service.js';
+import type { Request, Response } from 'express';
 
 export class HealthController {
   private readonly healthService: HealthService;

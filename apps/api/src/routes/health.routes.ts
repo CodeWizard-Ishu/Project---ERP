@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import { asyncHandler } from '../utils/asyncHandler.js';
+import { Router, type IRouter } from 'express';
 import { HealthController } from '../modules/health/health.controller.js';
 import { HealthService } from '../modules/health/health.service.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
-const router = Router();
+const router: IRouter = Router();
 
 const healthService = new HealthService();
 const healthController = new HealthController(healthService);

@@ -1,6 +1,6 @@
 import { prisma } from '../../config/database.js';
-import { cacheClient } from '../../config/redis.js';
 import { config } from '../../config/env.js';
+import { cacheClient } from '../../config/redis.js';
 import { logger } from '../../utils/logger.js';
 
 interface CheckResult {

@@ -1,5 +1,5 @@
-import express from 'express';
 import compression from 'compression';
+import express, { type Express } from 'express';
 import { config } from './config/env.js';
 import {
   requestIdMiddleware,
@@ -13,7 +13,7 @@ import {
 } from './middleware/index.js';
 import router from './routes/index.js';
 
-const app = express();
+const app: Express = express();
 
 // Trust proxy (for correct IP detection behind nginx/load balancer)
 app.set('trust proxy', 1);

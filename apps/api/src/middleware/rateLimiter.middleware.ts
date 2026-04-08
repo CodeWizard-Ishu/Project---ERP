@@ -1,7 +1,7 @@
 import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
-import { cacheClient } from '../config/redis.js';
 import { config } from '../config/env.js';
+import { cacheClient } from '../config/redis.js';
 import { ErrorCode } from '../errors/errorCodes.js';
 
 export const globalRateLimiter = rateLimit({
@@ -11,7 +11,7 @@ export const globalRateLimiter = rateLimit({
   legacyHeaders: false,
   store: new RedisStore({
     sendCommand: (...args: string[]) =>
-      cacheClient.call(args[0]!, ...args.slice(1)) as Promise<unknown> as never,
+      cacheClient.call(args[0]!, ...args.slice(1)) as never,
   }),
   keyGenerator: (req) => {
     const tenantId = (req.headers['x-tenant-id'] as string | undefined) ?? 'global';
@@ -38,7 +38,7 @@ export const authRateLimiter = rateLimit({
   legacyHeaders: false,
   store: new RedisStore({
     sendCommand: (...args: string[]) =>
-      cacheClient.call(args[0]!, ...args.slice(1)) as Promise<unknown> as never,
+      cacheClient.call(args[0]!, ...args.slice(1)) as never,
   }),
   keyGenerator: (req) => `rl:auth:${req.ip ?? 'unknown'}`,
   handler: (_req, res) => {

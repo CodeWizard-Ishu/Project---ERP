@@ -1,4 +1,4 @@
-import { type Response } from 'express';
+import type { Response } from 'express';
 
 export interface ApiResponseBody<T = null> {
   success: boolean;
@@ -31,7 +31,7 @@ export const sendSuccess = <T>(
   const response: ApiResponseBody<T> = {
     success: true,
     data,
-    message,
+    ...(message !== undefined && { message }),
     meta: {
       timestamp: new Date().toISOString(),
       version: '1.0',
@@ -57,7 +57,7 @@ export const sendPaginated = <T>(
     success: true,
     data,
     pagination,
-    message,
+    ...(message !== undefined && { message }),
     meta: {
       timestamp: new Date().toISOString(),
       version: '1.0',

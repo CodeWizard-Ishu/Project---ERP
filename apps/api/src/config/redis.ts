@@ -1,6 +1,6 @@
 import { Redis } from 'ioredis';
-import { config } from './env.js';
 import { logger } from '../utils/logger.js';
+import { config } from './env.js';
 
 const createRedisClient = (db: number, name: string): Redis => {
   const client = new Redis({

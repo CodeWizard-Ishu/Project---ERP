@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
-import { type Request, type Response, type NextFunction } from 'express';
 import { requestContext } from '../utils/logger.js';
+import type { Request, Response, NextFunction } from 'express';
 
 export const REQUEST_ID_HEADER = 'X-Request-ID';
 

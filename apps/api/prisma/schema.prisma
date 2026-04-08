@@ -4,17 +4,197 @@ generator client {
 }
 
 datasource db {
-  provider   = "postgresql"
-  url        = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-// Phase 2 will replace this with real tables:
-// - tenants, users, roles, permissions, role_permissions, audit_logs
-// Prisma requires at least one model to generate the client.
+// ─── Enums ──────────────────────────────────────────────────────
 
-model Placeholder {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt DateTime @default(now()) @map("created_at")
+enum TenantPlan {
+  FREE
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+}
 
-  @@map("_placeholder")
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+enum UserStatus {
+  INVITED
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  EXPORT
+  APPROVE
+  REJECT
+}
+
+// ─── Models ─────────────────────────────────────────────────────
+
+model Tenant {
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String       @db.VarChar(255)
+  slug      String       @unique @db.VarChar(100)
+  plan      TenantPlan   @default(FREE)
+  status    TenantStatus @default(ACTIVE)
+  settings  Json         @default("{}")
+  metadata  Json         @default("{}")
+  createdAt DateTime     @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt DateTime     @updatedAt @db.Timestamptz(6) @map("updated_at")
+  deletedAt DateTime?    @db.Timestamptz(6) @map("deleted_at")
+
+  users         User[]
+  roles         Role[]
+  auditLogs     AuditLog[]
+  refreshTokens RefreshToken[]
+
+  @@index([slug])
+  @@index([status])
+  @@map("tenants")
+}
+
+model User {
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId        String     @db.Uuid @map("tenant_id")
+  email           String     @db.VarChar(255)
+  passwordHash    String     @db.VarChar(255) @map("password_hash")
+  firstName       String     @db.VarChar(100) @map("first_name")
+  lastName        String     @db.VarChar(100) @map("last_name")
+  avatarUrl       String?    @db.VarChar(2048) @map("avatar_url")
+  status          UserStatus @default(INVITED)
+  emailVerifiedAt DateTime?  @db.Timestamptz(6) @map("email_verified_at")
+  lastLoginAt     DateTime?  @db.Timestamptz(6) @map("last_login_at")
+  invitedBy       String?    @db.Uuid @map("invited_by")
+  createdAt       DateTime   @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt       DateTime   @updatedAt @db.Timestamptz(6) @map("updated_at")
+  deletedAt       DateTime?  @db.Timestamptz(6) @map("deleted_at")
+
+  tenant        Tenant         @relation(fields: [tenantId], references: [id])
+  userRoles     UserRole[]
+  auditLogs     AuditLog[]
+  refreshTokens RefreshToken[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId, status])
+  @@index([tenantId, email])
+  @@index([tenantId, deletedAt])
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String?  @db.Uuid @map("tenant_id")
+  name        String   @db.VarChar(100)
+  description String?  @db.VarChar(500)
+  isSystem    Boolean  @default(false) @map("is_system")
+  createdAt   DateTime @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6) @map("updated_at")
+
+  tenant          Tenant?          @relation(fields: [tenantId], references: [id])
+  rolePermissions RolePermission[]
+  userRoles       UserRole[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@index([isSystem])
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resource    String   @db.VarChar(100)
+  action      String   @db.VarChar(100)
+  description String?  @db.VarChar(500)
+  createdAt   DateTime @default(now()) @db.Timestamptz(6) @map("created_at")
+
+  rolePermissions RolePermission[]
+
+  @@unique([resource, action])
+  @@index([resource])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String   @db.Uuid @map("role_id")
+  permissionId String   @db.Uuid @map("permission_id")
+  assignedAt   DateTime @default(now()) @db.Timestamptz(6) @map("assigned_at")
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  userId     String   @db.Uuid @map("user_id")
+  roleId     String   @db.Uuid @map("role_id")
+  assignedAt DateTime @default(now()) @db.Timestamptz(6) @map("assigned_at")
+  assignedBy String?  @db.Uuid @map("assigned_by")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+model RefreshToken {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @db.Uuid @map("user_id")
+  tenantId  String    @db.Uuid @map("tenant_id")
+  tokenHash String    @db.VarChar(64) @map("token_hash")
+  familyId  String    @db.Uuid @map("family_id")
+  expiresAt DateTime  @db.Timestamptz(6) @map("expires_at")
+  revokedAt DateTime? @db.Timestamptz(6) @map("revoked_at")
+  ipAddress String?   @db.VarChar(45) @map("ip_address")
+  userAgent String?   @db.VarChar(512) @map("user_agent")
+  createdAt DateTime  @default(now()) @db.Timestamptz(6) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tokenHash])
+  @@index([userId, revokedAt])
+  @@index([familyId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+model AuditLog {
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId   String      @db.Uuid @map("tenant_id")
+  userId     String?     @db.Uuid @map("user_id")
+  action     AuditAction
+  entityType String      @db.VarChar(100) @map("entity_type")
+  entityId   String      @db.VarChar(36) @map("entity_id")
+  oldValues  Json?       @map("old_values")
+  newValues  Json?       @map("new_values")
+  ipAddress  String?     @db.VarChar(45) @map("ip_address")
+  userAgent  String?     @db.VarChar(512) @map("user_agent")
+  metadata   Json?
+  createdAt  DateTime    @default(now()) @db.Timestamptz(6) @map("created_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  user   User?  @relation(fields: [userId], references: [id])
+
+  @@index([tenantId, entityType, entityId])
+  @@index([tenantId, userId])
+  @@index([tenantId, createdAt(sort: Desc)])
+  @@index([tenantId, action])
+  @@map("audit_logs")
 }

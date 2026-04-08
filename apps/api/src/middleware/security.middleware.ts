@@ -1,7 +1,8 @@
-import helmet from 'helmet';
 import cors from 'cors';
+import helmet from 'helmet';
 import hpp from 'hpp';
 import { config } from '../config/env.js';
+import type { RequestHandler } from 'express';
 
 export const helmetMiddleware = helmet({
   contentSecurityPolicy: {
@@ -47,4 +48,4 @@ export const corsMiddleware = cors({
   maxAge: 86400,
 });
 
-export const hppMiddleware = hpp();
+export const hppMiddleware: RequestHandler = hpp();

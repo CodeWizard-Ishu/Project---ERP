@@ -1,6 +1,6 @@
-import { type ZodError } from 'zod';
 import { AppError } from './AppError.js';
 import { ErrorCode } from './errorCodes.js';
+import type { ZodError } from 'zod';
 
 export class ValidationError extends AppError {
   public readonly fieldErrors: Record<string, string[]>;

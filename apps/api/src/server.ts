@@ -1,6 +1,6 @@
 import app from './app.js';
-import { config } from './config/env.js';
 import { connectDatabase, disconnectDatabase } from './config/database.js';
+import { config } from './config/env.js';
 import { connectRedis, disconnectRedis } from './config/redis.js';
 import { logger } from './utils/logger.js';
 

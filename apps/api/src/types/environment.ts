@@ -1,4 +1,4 @@
-import { type Config } from '../config/env.js';
+import type { Config } from '../config/env.js';
 
 export type Environment = Config['NODE_ENV'];
 
