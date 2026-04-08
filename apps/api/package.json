@@ -23,9 +23,11 @@
   "dependencies": {
     "@erp/shared": "workspace:*",
     "@prisma/client": "^5.14.0",
+    "@types/cookie-parser": "^1.4.10",
     "bcryptjs": "^2.4.3",
     "bullmq": "^5.10.0",
     "compression": "^1.7.4",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^5.0.0",
     "express-rate-limit": "^7.3.0",

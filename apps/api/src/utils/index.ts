@@ -5,3 +5,6 @@ export { sendSuccess, sendCreated, sendNoContent, sendPaginated } from './respon
 export type { ApiResponseBody, PaginatedApiResponseBody } from './response.js';
 export { paginationSchema, getPaginationMeta, getPaginationOffset } from './pagination.js';
 export type { PaginationParams, PaginationMeta } from './pagination.js';
+export { generateAccessToken, verifyAccessToken, decodeTokenUnsafe, getTokenRemainingTTL, parseDurationToSeconds } from './jwt.utils.js';
+export type { GenerateAccessTokenParams, GenerateAccessTokenResult } from './jwt.utils.js';
+export { generateRefreshToken, hashRefreshToken, generatePasswordResetToken, hashPasswordResetToken, parseExpiryToMs } from './token.utils.js';

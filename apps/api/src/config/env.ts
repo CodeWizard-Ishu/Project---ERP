@@ -35,6 +35,23 @@ const envSchema = z.object({
     .string()
     .transform((val) => val.split(',').map((s) => s.trim()))
     .default('http://localhost:5173'),
+
+  // ─── Superadmin ────────────────────────────────────────────────────
+  SUPERADMIN_EMAIL: z.string().email().default('superadmin@erp.local'),
+  SUPERADMIN_PASSWORD: z.string().min(12).optional(),
+
+  // ─── Cookie security ────────────────────────────────────────────────
+  COOKIE_SECRET: z
+    .string()
+    .min(32, 'COOKIE_SECRET must be at least 32 characters')
+    .default('change-this-cookie-secret-in-production-min-32-chars!!'),
+
+  // ─── SMTP (Phase 13 email sending) ─────────────────────────────────
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().int().optional(),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  FROM_EMAIL: z.string().email().optional(),
 });
 
 const parseResult = envSchema.safeParse(process.env);

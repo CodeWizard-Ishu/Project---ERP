@@ -6,6 +6,7 @@ export type { ErrorDetail } from './types/index.js';
 export type { Tenant, TenantPlan, TenantStatus, TenantSettings, TenantPublicProfile } from './types/index.js';
 export type { User, PublicUser, UserWithRoles, UserProfile, UserStatus } from './types/index.js';
 export type { RbacResource, RbacAction, Permission, Role, PermissionRecord } from './types/index.js';
+export type { LoginResponse, RefreshResponse, RegisterResponse, AccessTokenPayload, ForgotPasswordResponse, PasswordResetResponse } from './types/index.js';
 
 // Constants
 export { HttpStatus, APP_CONSTANTS, CACHE_TTL, QUEUE_NAMES } from './constants/index.js';

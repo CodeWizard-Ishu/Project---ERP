@@ -5,6 +5,9 @@ declare global {
       tenantId?: string;
       userId?: string;
       userRole?: string;
+      permissions?: string[];
+      accessTokenJti?: string;
+      accessTokenExp?: number;
     }
   }
 }

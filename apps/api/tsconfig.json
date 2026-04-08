@@ -2,11 +2,10 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
     "composite": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "prisma/seeds/**/*.ts"],
   "exclude": ["node_modules", "dist", "tests"],
   "references": [
     { "path": "../../packages/shared" }
