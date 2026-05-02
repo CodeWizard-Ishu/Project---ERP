@@ -54,3 +54,4 @@ apps/api/prisma/migrations/**/migration_lock.toml
 # Misc
 *.tgz
 .prettierignore
+graphify-out/
